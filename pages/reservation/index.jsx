@@ -380,7 +380,7 @@ export default function Index() {
                           <div className={'flex flex-row justify-end'}>
                               <SheetTrigger asChild>
                                   <Button
-                                      className={'w-fit bg-white flex flex-row gap-4 text-black hover:text-black dark:text-white'}>
+                                      className={'w-fit dark:bg-white dark:text-black dark:hover:bg-primary dark:hover:text-white flex flex-row gap-4 bg-primary hover:bg-black hover:text-white '}>
                                       <span className={'font-bold text-2xl'}>
                                             {cartStore.length}
                                       </span>
