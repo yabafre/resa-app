@@ -1,0 +1,93 @@
+// Définit un client Prisma pour interagir avec votre base de données
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Configure la source de données, ici PostgreSQL, avec l'URL de la base de données en variable d'environnement
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modèle représentant un service que les clients peuvent réserver
+model Service {
+  id                 Int                  @id @default(autoincrement())
+  name               String
+  duration           Int                  @default(30) // Durée prévue du service en minutes
+  description        String
+  price              Float
+  categoryId         Int
+  category           ServiceCategory      @relation(fields: [categoryId], references: [id]) // Catégorie du service
+  employees          Employee[]           @relation("EmployeeServices") // Employés pouvant fournir ce service
+  Appointment        Appointment[]        @relation("AppointmentServices")
+  AppointmentService AppointmentService[]
+}
+
+// Catégorie ou type de service (par exemple, coupe de cheveux, coloration, etc.)
+model ServiceCategory {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  services Service[]
+}
+
+// Employé pouvant fournir des services
+model Employee {
+  id              Int              @id @default(autoincrement())
+  name            String
+  role            String // Rôle de l'employé, par exemple coiffeur, esthéticienne, etc.
+  weeklyWorkSlots WeeklyWorkSlot[] // Créneaux de travail hebdomadaires récurrents
+  services        Service[]        @relation("EmployeeServices") // Services que l'employé peut fournir
+  Appointment     Appointment[] // Rendez-vous prévus avec cet employé
+}
+
+// Créneaux de travail hebdomadaires récurrents pour chaque employé
+model WeeklyWorkSlot {
+  id         Int            @id @default(autoincrement())
+  dayOfWeek  String // Jour de la semaine
+  employeeId Int
+  employee   Employee       @relation(fields: [employeeId], references: [id])
+  times      WorkSlotTime[] // Horaires spécifiques disponibles dans ce créneau
+}
+
+// Horaires spécifiques disponibles pour un créneau hebdomadaire
+model WorkSlotTime {
+  id               Int            @id @default(autoincrement())
+  startTime        String // Heure de début du créneau (format "HH:MM")
+  endTime          String // Heure de fin, calculée en fonction de la durée des prestations
+  weeklyWorkSlotId Int
+  weeklyWorkSlot   WeeklyWorkSlot @relation(fields: [weeklyWorkSlotId], references: [id])
+  available        Boolean        @default(true) // Si le créneau est disponible pour la réservation
+}
+
+// Rendez-vous réservés par les clients
+model Appointment {
+  id                 Int                  @id @default(autoincrement())
+  date               String // Date du rendez-vous (format "YYYY-MM-DD")
+  startTime          String // Heure de début (format "HH:MM")
+  endTime            String // Heure de fin, calculée en fonction de la durée du service
+  employeeId         Int
+  employee           Employee             @relation(fields: [employeeId], references: [id])
+  services           Service[]            @relation("AppointmentServices")
+  clientId           Int
+  client             Client               @relation(fields: [clientId], references: [id]) // Client ayant réservé le rendez-vous
+  AppointmentService AppointmentService[]
+}
+
+model AppointmentService {
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointmentId Int
+  service       Service     @relation(fields: [serviceId], references: [id])
+  serviceId     Int
+
+  @@id([appointmentId, serviceId])
+}
+
+// Clients pouvant réserver des rendez-vous
+model Client {
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String
+  phone        String
+  notes        String? // Notes optionnelles sur le client
+  appointments Appointment[] // Rendez-vous réservés par le client
+}
