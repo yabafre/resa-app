@@ -18,7 +18,7 @@ export default async function handler(req, res) {
           },
       });
       console.log(`Fetched ${employees.length} employees successfully`);
-      res.status(200).json({employees});
+      res.status(200).json(employees);
     } catch (error) {
       console.error('Failed to fetch employees:', error.message, error.stack);
       res.status(500).json({ error: 'Failed to fetch employees', details: error.message });

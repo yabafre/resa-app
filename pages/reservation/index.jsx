@@ -165,7 +165,6 @@ export default function Index() {
     };
     const onSubmit = async (data) => {
         if (!selectedEmployee || !date || !selectedTimeSlot || cartStore.length === 0) {
-            console.error("Veuillez remplir tous les champs requis.");
             setMessage('Veuillez remplir tous les champs requis.');
             // Affichez un message d'erreur ou une alerte à l'utilisateur si nécessaire
             return;
@@ -208,7 +207,6 @@ export default function Index() {
         }
     };
     const onError = (error) => {
-        console.error('Erreur lors de la soumission du formulaire :', error);
         // Affichez un message d'erreur ou une alerte à l'utilisateur si nécessaire
         setMessage(error);
         setIsOpenAlert(true);
@@ -246,6 +244,8 @@ export default function Index() {
                     nonEmptyCartItems.map(service => fetchEmployeesForService(service.id))
                 );
 
+                console.log('Employés récupérés pour les services sélectionnés :', employeeLists)
+
                 // Calculer les ID communs à tous les services.
                 const employeeIdsForAllServices = employeeLists.reduce((commonIds, currentList, index) => {
                     if (index === 0) {
@@ -273,7 +273,6 @@ export default function Index() {
     }, [selectedEmployee]);
 
     useEffect(() => {
-        console.log(form);
         // check if the form is valid and not empty
         if (form.formState.isValid) {
             setFormValid(true);
