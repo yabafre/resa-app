@@ -286,7 +286,7 @@ export async function getServerSideProps() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/services`);
         if (!res.ok) throw new Error(`Failed to fetch services by category, status: ${res.status}`);
-        const servicesByCategory = await res.json().employees;
+        const servicesByCategory = await res.json();
         // categories = [{ name: 'Category 1', services: [{ name: 'Service 1' }] }]
         return {
             props: {
