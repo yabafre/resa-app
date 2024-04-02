@@ -12,9 +12,9 @@ datasource db {
 // Modèle représentant un service que les clients peuvent réserver
 model Service {
   id                 Int                  @id @default(autoincrement())
-  name               String
+  name               String               @unique
   duration           Int                  @default(30) // Durée prévue du service en minutes
-  description        String
+  description        String?
   price              Float
   categoryId         Int
   category           ServiceCategory      @relation(fields: [categoryId], references: [id]) // Catégorie du service
@@ -33,7 +33,7 @@ model ServiceCategory {
 // Employé pouvant fournir des services
 model Employee {
   id              Int              @id @default(autoincrement())
-  name            String
+  name            String           @unique
   role            String // Rôle de l'employé, par exemple coiffeur, esthéticienne, etc.
   weeklyWorkSlots WeeklyWorkSlot[] // Créneaux de travail hebdomadaires récurrents
   services        Service[]        @relation("EmployeeServices") // Services que l'employé peut fournir

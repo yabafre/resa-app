@@ -7,12 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "@babel/preset-react": "^7.24.1",
     "@hookform/resolvers": "^3.3.4",
-    "@hotjar/browser": "^1.0.9",
+    "@jest/test-sequencer": "^29.7.0",
     "@prisma/client": "^5.11.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-dialog": "^1.0.5",

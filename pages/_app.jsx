@@ -19,12 +19,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Slash } from "lucide-react"
 import Link from "next/link";
-import Hotjar from '@hotjar/browser';
 
-const siteId = 3928483;
-const hotjarVersion = 6;
-
-Hotjar.init(siteId, hotjarVersion);
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
