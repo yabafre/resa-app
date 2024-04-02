@@ -111,7 +111,7 @@ export default function Index() {
 
     function handleRemoveFromCart( selectedService) {
         removeFromCart(selectedService.id)
-        console.log('Service removed from cart:', selectedService)
+        console.log('cart:', cart)
     }
     const fetchEmployeeAvailability = async (employeeId, formDate ) => {
         try {
@@ -224,12 +224,13 @@ export default function Index() {
         const nonEmptyCartItems = cart.filter(item => Object.keys(item).length !== 0);
         if (!nonEmptyCartItems.length) {
             console.log('Le panier est vide ou contient des objets non valides.');
+            setCartStore([])
             return;
         }
         setCartStore(nonEmptyCartItems);
         const serviceIds = nonEmptyCartItems.map(item => item.id);
         form.setValue('serviceIds', serviceIds);
-        const totalPrice = nonEmptyCartItems.reduce((acc, item) => acc + item.price, 0);
+        const totalPrice = nonEmptyCartItems.reduce((acc, item) => acc + (item.price ?? 0), 0);
         setTotalPrice(totalPrice);
         const fetchEmployeesForService = async (serviceId) => {
             const response = await fetch(`/api/employees/${serviceId}`);
@@ -263,7 +264,7 @@ export default function Index() {
             }
         };
         fetchAllEmployees().then(r => console.log('Employés récupérés pour les services sélectionnés.'));
-    }, [cart,form]);
+    }, [cart, form]);
 
     useEffect(() => {
         if (selectedEmployee) {
